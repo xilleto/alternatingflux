@@ -67,8 +67,8 @@ public class AlternatingFlux {
 		AFWireType.init();
 		proxy.preInit();
 		
-		GameRegistry.registerTileEntity(TileEntityRelayAF.class, MODID + ":af_relay");
-		GameRegistry.registerTileEntity(TileEntityTransformerAF.class, MODID + ":af_transformer");
+		GameRegistry.registerTileEntity(TileEntityRelayAF.class, new ResourceLocation(MODID, "af_relay"));
+		GameRegistry.registerTileEntity(TileEntityTransformerAF.class, new ResourceLocation(MODID, "af_af_transformer"));
 	}
 	
 	private static ResourceLocation createRegistryName(String unlocalized)
