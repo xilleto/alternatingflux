@@ -17,6 +17,6 @@ abstract class BlockAFTileProvider<E extends Enum<E> & BlockIEBase.IBlockEnum> e
 	@Override
 	public String createRegistryName()
 	{
-		return AlternatingFlux.MODID+":"+name;
+		return AlternatingFlux.MODID + ":" + name;
 	}
 }

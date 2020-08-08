@@ -65,10 +65,8 @@ public class ClientProxy extends CommonProxy {
 	{
 		WireApi.registerConnectorForRender("conn_af", new ResourceLocation("alternatingflux:block/connector/connector_af.obj"), null);
 		WireApi.registerConnectorForRender("rel_af", new ResourceLocation("alternatingflux:block/connector/relay_af.obj"), null);
-		WireApi.registerConnectorForRender("transformer_af_left",
-				new ResourceLocation("alternatingflux:block/connector/transformer_af_left.obj"), null);
-		WireApi.registerConnectorForRender("transformer_af_right",
-				new ResourceLocation("alternatingflux:block/connector/transformer_af_right.obj"), null);
+		WireApi.registerConnectorForRender("transformer_af_left", new ResourceLocation("alternatingflux:block/connector/transformer_af_left.obj"), null);
+		WireApi.registerConnectorForRender("transformer_af_right", new ResourceLocation("alternatingflux:block/connector/transformer_af_right.obj"), null);
 		
     //This is mostly copied from IE's registerModels function in it's ClientProxy, so we can get everything integrated properly.
 		for(Block block : AlternatingFlux.blocks)

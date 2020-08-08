@@ -14,17 +14,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class AFWireType extends WireType {
 	public static AFWireType AF;
-
+	
 	final int ordinal;
+	
+	public static String[] wire_names = { "AF" };
+	public static int[]	wire_rates;
+	public static double[] wire_lossratios;
+	public static int[]	wire_length;
 
-	public static String[]	wire_names	= { "AF" };
-	public static int[]		wire_rates;
-	public static double[]	wire_lossratios;
-	public static int[]		wire_length;
-
-	public static int[]		wire_colors;
-	public static double[]	wire_renderdias	= { 0.078125 };
-
+	public static int[]	wire_colors;
+	public static double[] wire_renderdias	= { 0.078125 };
+	
 	public AFWireType(int ordinal) {
 		super();
 		this.ordinal = ordinal;

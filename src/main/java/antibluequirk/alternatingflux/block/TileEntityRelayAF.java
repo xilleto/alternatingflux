@@ -38,9 +38,8 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityRelayAF extends TileEntityImmersiveConnectable
-		implements ITickable, IDirectionalTile, IBlockBounds, IOBJModelCallback<IBlockState> {
-	public EnumFacing	facing					= EnumFacing.DOWN;
+public class TileEntityRelayAF extends TileEntityImmersiveConnectable implements ITickable, IDirectionalTile, IBlockBounds, IOBJModelCallback<IBlockState> {
+	public EnumFacing facing = EnumFacing.DOWN;
 
 	boolean firstTick = true;
 
