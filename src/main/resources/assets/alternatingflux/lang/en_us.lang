@@ -12,6 +12,7 @@ config.alternatingflux.wireTransferRate.name=Wire Transfer Rate
 config.alternatingflux.wireLossRatio.name=Wire Loss Ratio
 config.alternatingflux.wireColouration.name=Wire Colour
 config.alternatingflux.wireLength.name=Wire Max Length
+config.alternatingflux.mergeTab.name=Merge Tabs
 
 #CREATIVE
 itemGroup.alternatingflux=Alternating Flux

@@ -4,9 +4,14 @@ import net.minecraftforge.common.config.Config;
 
 @Config(modid = AlternatingFlux.MODID, name = AlternatingFlux.MODID, category = "general")
 public class AlternatingFluxConfig {
-	@Config.Comment({ "The transfer rates for the wires."})
+	@Config.Comment({"The transfer rates for the wires."})
 	@Config.LangKey("config.alternatingflux.wireTransferRate.name")
 	public static int wireTransferRate = 131072;
+	
+	@Config.Comment({"True to disable creation of Alternating Flux creative tab. The items will be available under Immersive Engineering tab"})
+	@Config.LangKey("config.alternatingflux.mergeTab.name")
+	@Config.RequiresMcRestart
+	public static boolean mergeTab = false;
 	
 	@Config.Comment({
 		"The percentage of power lost every X blocks of distance for a wire network. (X is equal to the maximum wire length.)",

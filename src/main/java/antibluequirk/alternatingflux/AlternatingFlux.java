@@ -4,6 +4,7 @@ import org.apache.logging.log4j.Logger;
 
 import antibluequirk.alternatingflux.block.BlockConnector;
 import antibluequirk.alternatingflux.item.ItemWireCoil;
+import blusunrize.immersiveengineering.ImmersiveEngineering;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -28,12 +29,7 @@ public class AlternatingFlux {
 	
 	@Mod.Instance(MODID)
 	public static AlternatingFlux instance = new AlternatingFlux();
-	public static CreativeTabs creativeTab = new CreativeTabs(MODID) {
-		@Override
-		public ItemStack createIcon() {
-			return new ItemStack(AlternatingFlux.item_coil, 1, 0);
-		}
-	};
+	public static CreativeTabs creativeTab;
 	
 	public static Item item_conn, item_coil, item_wire;
 	public static BlockConnector block_conn;
@@ -46,6 +42,19 @@ public class AlternatingFlux {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		logger = event.getModLog();
+		
+		// Initialize the creative tab
+		if(AlternatingFluxConfig.mergeTab) AlternatingFlux.creativeTab = ImmersiveEngineering.creativeTab;
+		else
+		{
+			AlternatingFlux.creativeTab = new CreativeTabs(MODID) {
+				@Override
+				public ItemStack createIcon()
+				{
+					return new ItemStack(AlternatingFlux.item_coil, 1, 0);
+				}
+			};
+		}
 		
 		item_wire = new Item().setRegistryName(new ResourceLocation(AlternatingFlux.MODID, "wire_constantan")).setTranslationKey("wire_constantan").setCreativeTab(creativeTab);
 		block_conn = new BlockConnector();
