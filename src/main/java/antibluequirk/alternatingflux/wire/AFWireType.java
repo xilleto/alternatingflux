@@ -1,7 +1,7 @@
 package antibluequirk.alternatingflux.wire;
 
 import antibluequirk.alternatingflux.AlternatingFlux;
-import antibluequirk.alternatingflux.Config.AFConfig;
+import antibluequirk.alternatingflux.Config;
 import antibluequirk.alternatingflux.block.BlockTypes_Connector;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.WireApi;
@@ -17,24 +17,11 @@ public class AFWireType extends WireType {
 	public static final ResourceLocation texture = new ResourceLocation(AlternatingFlux.MODID, "block/connector/relay_af.obj"); 
 	public static AFWireType instance;
 	
-	final int ordinal;
-	
-	public static String[] wire_names = { "AF" };
-	public static int[]	wire_rates;
-	public static double[] wire_lossratios;
-	public static int[]	wire_length;
-
-	public static int[]	wire_colors;
-	public static double[] wire_renderdias	= { 0.078125 };
-	
-	private AFWireType(int ordinal) {
-		super();
-		this.ordinal = ordinal;
-	}
+	private AFWireType() {}
 	
 	public static void init()
 	{
-		instance = new AFWireType(0);
+		instance = new AFWireType();
 		IBlockState validconnection = AlternatingFlux.block_conn.getDefaultState().withProperty(AlternatingFlux.block_conn.property, BlockTypes_Connector.RELAY_AF);
 		WireApi.registerFeedthroughForWiretype(instance, texture, AlternatingFlux.TEX_PASSTHROUGH_AF, new float[]{0, 0, 16, 16}, 0.75, validconnection, 8 * 30F / instance.getTransferRate(), 15, (f)->f);
 	}
@@ -43,53 +30,63 @@ public class AFWireType extends WireType {
 	 * In this case, this does not return the loss RATIO but the loss PER BLOCK
 	 */
 	@Override
-	public double getLossRatio() {
-		return wire_lossratios[ordinal];
+	public double getLossRatio()
+	{
+		return Config.AFConfig.wireLossRatio;
 	}
 
 	@Override
-	public int getTransferRate() {
-		return wire_rates[ordinal];
+	public int getTransferRate()
+	{
+		return Config.AFConfig.wireTransferRate;
 	}
 
 	@Override
-	public int getColour(Connection connection) {
-		return wire_colors[ordinal];
+	public int getColour(Connection connection)
+	{
+		return Config.AFConfig.wireColouration;
 	}
 
 	@Override
-	public double getSlack() {
+	public double getSlack()
+	{
 		return 1.002;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public TextureAtlasSprite getIcon(Connection connection) {
+	public TextureAtlasSprite getIcon(Connection connection)
+	{
 		return iconDefaultWire;
 	}
 
 	@Override
-	public int getMaxLength() {
-		return AFConfig.wireLength[ordinal];
+	public int getMaxLength()
+	{
+		return Config.AFConfig.wireLength;
 	}
 
 	@Override
-	public ItemStack getWireCoil() {
-		return new ItemStack(AlternatingFlux.item_coil, 1, ordinal);
+	public ItemStack getWireCoil()
+	{
+		return new ItemStack(AlternatingFlux.item_coil);
 	}
 
 	@Override
-	public String getUniqueName() {
-		return wire_names[ordinal];
+	public String getUniqueName()
+	{
+		return AlternatingFlux.MODID;
 	}
 
 	@Override
-	public double getRenderDiameter() {
-		return wire_renderdias[ordinal];
+	public double getRenderDiameter()
+	{
+		return 0.078125D;
 	}
 
 	@Override
-	public boolean isEnergyWire() {
+	public boolean isEnergyWire()
+	{
 		return true;
 	}
 	
@@ -102,16 +99,12 @@ public class AFWireType extends WireType {
 	@Override
 	public double getDamageRadius()
 	{
-		switch (ordinal)
-		{
-			case 0://AF
-				return .5;
-		}
-		return 0;
+		return 0.5;
 	}
 		
 	@Override
-	public boolean canCauseDamage() {
+	public boolean canCauseDamage()
+	{
 		return true;
 	}
 }
