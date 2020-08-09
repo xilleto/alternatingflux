@@ -1,8 +1,5 @@
 package antibluequirk.alternatingflux;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.logging.log4j.Logger;
 
 import antibluequirk.alternatingflux.block.BlockConnector;
@@ -38,9 +35,6 @@ public class AlternatingFlux {
 		}
 	};
 	
-	public static final List<Block> blocks = new ArrayList<>();
-	public static final List<Item> items = new ArrayList<>(); //TODO remove
-	
 	public static Item item_conn, item_coil, item_wire;
 	public static BlockConnector block_conn;
 	
@@ -71,33 +65,15 @@ public class AlternatingFlux {
 		proxy.postInit();
 	}
 	
-	private static ResourceLocation createRegistryName(String unlocalized)
-	{
-		unlocalized = unlocalized.substring(unlocalized.indexOf(MODID));
-		unlocalized = unlocalized.replaceFirst("\\.", ":");
-		return new ResourceLocation(unlocalized);
-	}
-	
 	@SubscribeEvent
-	public static void registerBlocks(RegistryEvent.Register<Block> event) {		
-		for(Block block : blocks)
-		{
-			logger.info("Registering legacy item with TK {}", block.getTranslationKey());
-			event.getRegistry().register(block.setRegistryName(createRegistryName(block.getTranslationKey())));
-			logger.info("Registered legacy block with TK {} and registry name {}", block.getTranslationKey(), block.getRegistryName().toString());
-		}
+	public static void registerBlocks(RegistryEvent.Register<Block> event) {
+		event.getRegistry().register(block_conn);
 	}
 	
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
 		IForgeRegistry<Item> reg = event.getRegistry();
-		for(Item item : items)
-		{
-			logger.info("Registering legacy item with TK {}", item.getTranslationKey());
-			reg.register(item.setRegistryName(createRegistryName(item.getTranslationKey())));
-			logger.info("Registered legacy item with TK {} and registry name {}", item.getTranslationKey(), item.getRegistryName().toString());
-		}
-		
+		reg.register(AlternatingFlux.block_conn.getItemBlock());
 		reg.registerAll(item_coil, item_wire);
 	}
 }

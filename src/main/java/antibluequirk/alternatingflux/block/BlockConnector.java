@@ -1,6 +1,7 @@
 package antibluequirk.alternatingflux.block;
 
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 
 import antibluequirk.alternatingflux.AlternatingFlux;
 import blusunrize.immersiveengineering.api.IEProperties;
@@ -19,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -26,18 +28,22 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 
-public class BlockConnector extends BlockAFTileProvider<BlockTypes_Connector>
+public class BlockConnector extends BlockUnregisteredIETileProvider<BlockTypes_Connector>
 {
+	public static final ResourceLocation id = new ResourceLocation(AlternatingFlux.MODID, "connector");
+	
 	public BlockConnector()
 	{
-		super("connector", Material.IRON, PropertyEnum.create("type", BlockTypes_Connector.class), ItemBlockIEBase.class, IEProperties.FACING_ALL, IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1], IEProperties.MULTIBLOCKSLAVE, IOBJModelCallback.PROPERTY);
+		super(BlockConnector.id, Material.IRON, PropertyEnum.create("type", BlockTypes_Connector.class), ItemBlockIEBase.class, IEProperties.FACING_ALL, IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1], IEProperties.MULTIBLOCKSLAVE, IOBJModelCallback.PROPERTY);
 		this.setHardness(3.0F);
 		this.setResistance(15.0F);
 		this.lightOpacity = 0;
 		this.setMetaBlockLayer(BlockTypes_Connector.RELAY_AF.getMeta(), BlockRenderLayer.SOLID, BlockRenderLayer.TRANSLUCENT);
 		this.setAllNotNormalBlock();
 		this.setMetaMobilityFlag(BlockTypes_Connector.TRANSFORMER_AF.getMeta(), EnumPushReaction.BLOCK);
+		
 		this.setCreativeTab(AlternatingFlux.creativeTab);
+		this.setTranslationKey("connector");
 	}
 	
 	@Override
@@ -45,22 +51,24 @@ public class BlockConnector extends BlockAFTileProvider<BlockTypes_Connector>
 	{
 		return true;
 	}
+	
 	@Override
 	public String getCustomStateMapping(int meta, boolean itemBlock)
 	{
-		if(meta==BlockTypes_Connector.TRANSFORMER_AF.getMeta())
-			return "transformer_af";
-		return null;
+		return meta == BlockTypes_Connector.TRANSFORMER_AF.getMeta() ? "transformer_af" : null;
 	}
+	
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		BlockStateContainer base = super.createBlockState();
-		IUnlistedProperty<?>[] unlisted = (base instanceof ExtendedBlockState) ? ((ExtendedBlockState) base).getUnlistedProperties().toArray(new IUnlistedProperty[0]) : new IUnlistedProperty[0];
-		unlisted = Arrays.copyOf(unlisted, unlisted.length+1);
-		unlisted[unlisted.length-1] = IEProperties.CONNECTIONS;
-		return new ExtendedBlockState(this, base.getProperties().toArray(new IProperty[0]), unlisted);
+		Collection<IUnlistedProperty<?>> list = new HashSet<IUnlistedProperty<?>>();
+		if(base instanceof ExtendedBlockState)
+			list.addAll(((ExtendedBlockState)base).getUnlistedProperties());
+		list.add(IEProperties.CONNECTIONS);
+		return new ExtendedBlockState(this, base.getProperties().toArray(new IProperty[0]), list.toArray(new IUnlistedProperty<?>[0]));
 	}
+	
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{

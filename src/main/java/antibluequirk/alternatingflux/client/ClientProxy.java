@@ -57,6 +57,46 @@ public class ClientProxy extends CommonProxy {
         event.getMap().registerSprite(AlternatingFlux.TEX_PASSTHROUGH_AF);
     }
 	
+	public <BLOCK extends Block & IIEMetaBlock> void registerIEBlockModel(BLOCK block)
+	{
+		ResourceLocation blockname = block.getRegistryName();
+		Item blockItem = Item.getItemFromBlock(block);
+		if(blockItem == null) throw new RuntimeException("Item representation for block " + blockname + " doesn't exist!");
+		if(block instanceof IIEMetaBlock)
+		{
+			IIEMetaBlock ieMetaBlock = (IIEMetaBlock)block;
+			if(ieMetaBlock.useCustomStateMapper()) ModelLoader.setCustomStateMapper(block, IECustomStateMapper.getStateMapper(ieMetaBlock));
+			ModelLoader.setCustomMeshDefinition(blockItem, new ItemMeshDefinition()
+			{
+				@Override
+				public ModelResourceLocation getModelLocation(ItemStack stack)
+				{
+					return new ModelResourceLocation(blockname, "inventory");
+				}
+			});
+			
+			for(int meta = 0; meta < ieMetaBlock.getMetaEnums().length; meta++)
+			{
+				String location = blockname.toString();
+				String prop = ieMetaBlock.appendPropertiesToState()?("inventory,"+ieMetaBlock.getMetaProperty().getName()+"="+ieMetaBlock.getMetaEnums()[meta].toString().toLowerCase(Locale.US)): null;
+				if(ieMetaBlock.useCustomStateMapper())
+				{
+					String custom = ieMetaBlock.getCustomStateMapping(meta, true);
+					if(custom!=null)
+						location += "_"+custom;
+				}
+				try
+				{
+					ModelLoader.setCustomModelResourceLocation(blockItem, meta, new ModelResourceLocation(location, prop));
+				} catch(NullPointerException npe)
+				{
+					throw new RuntimeException("WELP! apparently "+ieMetaBlock+" lacks an item!", npe);
+				}
+			}
+		}
+		else ModelLoader.setCustomModelResourceLocation(blockItem, 0, new ModelResourceLocation(blockname, "inventory"));
+	}
+	
 	@SubscribeEvent
 	@SuppressWarnings("deprecation")
 	public void registerModels(ModelRegistryEvent evt)
@@ -68,56 +108,13 @@ public class ClientProxy extends CommonProxy {
 		
 		ModelLoader.setCustomModelResourceLocation(AlternatingFlux.item_coil, 0, new ModelResourceLocation(AlternatingFlux.item_coil.getRegistryName(), "inventory"));
 		ModelLoader.setCustomModelResourceLocation(AlternatingFlux.item_wire, 0, new ModelResourceLocation(AlternatingFlux.item_wire.getRegistryName(), "inventory"));
-		
-		for(Block block : AlternatingFlux.blocks)
-		{
-			final ResourceLocation loc = Block.REGISTRY.getNameForObject(block);
-			Item blockItem = Item.getItemFromBlock(block);
-			if(blockItem==null)
-				throw new RuntimeException("ITEMBLOCK FOR "+loc+" : "+block+" IS NULL");
-			if(block instanceof IIEMetaBlock)
-			{
-				IIEMetaBlock ieMetaBlock = (IIEMetaBlock)block;
-				if(ieMetaBlock.useCustomStateMapper())
-					ModelLoader.setCustomStateMapper(block, IECustomStateMapper.getStateMapper(ieMetaBlock));
-				ModelLoader.setCustomMeshDefinition(blockItem, new ItemMeshDefinition()
-				{
-					@Override
-					public ModelResourceLocation getModelLocation(ItemStack stack)
-					{
-						return new ModelResourceLocation(loc, "inventory");
-					}
-				});
-				for(int meta = 0; meta < ieMetaBlock.getMetaEnums().length; meta++)
-				{
-					String location = loc.toString();
-					String prop = ieMetaBlock.appendPropertiesToState()?("inventory,"+ieMetaBlock.getMetaProperty().getName()+"="+ieMetaBlock.getMetaEnums()[meta].toString().toLowerCase(Locale.US)): null;
-					if(ieMetaBlock.useCustomStateMapper())
-					{
-						String custom = ieMetaBlock.getCustomStateMapping(meta, true);
-						if(custom!=null)
-							location += "_"+custom;
-					}
-					try
-					{
-						ModelLoader.setCustomModelResourceLocation(blockItem, meta, new ModelResourceLocation(location, prop));
-					} catch(NullPointerException npe)
-					{
-						throw new RuntimeException("WELP! apparently "+ieMetaBlock+" lacks an item!", npe);
-					}
-				}
-			}
-			//Not needed now
-			/* else if(block instanceof BlockIEFluid)
-				mapFluidState(block, ((BlockIEFluid)block).getFluid()); */
-			else
-				ModelLoader.setCustomModelResourceLocation(blockItem, 0, new ModelResourceLocation(loc, "inventory"));
-		}
+		this.registerIEBlockModel(AlternatingFlux.block_conn);
 	}
+	
 	@SubscribeEvent
-	public void updateConfig(OnConfigChangedEvent e)
+	public void updateConfig(OnConfigChangedEvent event)
 	{
-		if (AlternatingFlux.MODID.equals(e.getModID()))
+		if(event.getModID().equals(AlternatingFlux.MODID))
 		{
     		ConfigManager.sync(AlternatingFlux.MODID, net.minecraftforge.common.config.Config.Type.INSTANCE);
     		Config.refresh();

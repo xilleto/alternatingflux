@@ -1,7 +1,7 @@
 # BLOCKS
-tile.alternatingflux.connector.connector_af.name=AF Wire Connector
-tile.alternatingflux.connector.relay_af.name=AF Wire Relay
-tile.alternatingflux.connector.transformer_af.name=AF Transformer
+tile.connector.connector_af.name=AF Wire Connector
+tile.connector.relay_af.name=AF Wire Relay
+tile.connector.transformer_af.name=AF Transformer
 
 # ITEMS
 item.wire_constantan.name=Constantan Wire
