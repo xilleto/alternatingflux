@@ -2,6 +2,7 @@ package antibluequirk.alternatingflux.block;
 
 import java.util.Arrays;
 
+import antibluequirk.alternatingflux.AlternatingFlux;
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
@@ -29,14 +30,14 @@ public class BlockConnector extends BlockAFTileProvider<BlockTypes_Connector>
 {
 	public BlockConnector()
 	{
-		super("connector", Material.IRON, PropertyEnum.create("type", BlockTypes_Connector.class), ItemBlockIEBase.class, IEProperties.FACING_ALL,
-			IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1], IEProperties.MULTIBLOCKSLAVE, IOBJModelCallback.PROPERTY);
-		setHardness(3.0F);
-		setResistance(15.0F);
-		lightOpacity = 0;
-		setMetaBlockLayer(BlockTypes_Connector.RELAY_AF.getMeta(), BlockRenderLayer.SOLID, BlockRenderLayer.TRANSLUCENT);
-		setAllNotNormalBlock();
-		setMetaMobilityFlag(BlockTypes_Connector.TRANSFORMER_AF.getMeta(), EnumPushReaction.BLOCK);
+		super("connector", Material.IRON, PropertyEnum.create("type", BlockTypes_Connector.class), ItemBlockIEBase.class, IEProperties.FACING_ALL, IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1], IEProperties.MULTIBLOCKSLAVE, IOBJModelCallback.PROPERTY);
+		this.setHardness(3.0F);
+		this.setResistance(15.0F);
+		this.lightOpacity = 0;
+		this.setMetaBlockLayer(BlockTypes_Connector.RELAY_AF.getMeta(), BlockRenderLayer.SOLID, BlockRenderLayer.TRANSLUCENT);
+		this.setAllNotNormalBlock();
+		this.setMetaMobilityFlag(BlockTypes_Connector.TRANSFORMER_AF.getMeta(), EnumPushReaction.BLOCK);
+		this.setCreativeTab(AlternatingFlux.creativeTab);
 	}
 	
 	@Override

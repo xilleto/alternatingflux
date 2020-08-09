@@ -81,14 +81,22 @@ public class AlternatingFlux {
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> event) {		
 		for(Block block : blocks)
+		{
+			logger.info("Registering legacy item with TK {}", block.getTranslationKey());
 			event.getRegistry().register(block.setRegistryName(createRegistryName(block.getTranslationKey())));
+			logger.info("Registered legacy block with TK {} and registry name {}", block.getTranslationKey(), block.getRegistryName().toString());
+		}
 	}
 	
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
 		IForgeRegistry<Item> reg = event.getRegistry();
 		for(Item item : items)
+		{
+			logger.info("Registering legacy item with TK {}", item.getTranslationKey());
 			reg.register(item.setRegistryName(createRegistryName(item.getTranslationKey())));
+			logger.info("Registered legacy item with TK {} and registry name {}", item.getTranslationKey(), item.getRegistryName().toString());
+		}
 		
 		reg.registerAll(item_coil, item_wire);
 	}
