@@ -1,39 +1,24 @@
 package antibluequirk.alternatingflux.item;
 
-import blusunrize.immersiveengineering.common.IESaveData;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityEnergyMeter;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityFeedthrough;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityRedstoneBreaker;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.Lib;
-import blusunrize.immersiveengineering.api.TargetingInfo;
-import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.IWireCoil;
-import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
-import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -48,11 +33,7 @@ public class ItemWireCoil extends ItemAFBase implements IWireCoil {
 
 	@Override
 	public WireType getWireType(ItemStack stack) {
-		switch (stack.getItemDamage()) {
-		default:
-		case 0:
-			return (WireType) AFWireType.AF;
-		}
+		return AFWireType.instance;
 	}
 
 	@Override
@@ -73,7 +54,13 @@ public class ItemWireCoil extends ItemAFBase implements IWireCoil {
         return ApiUtils.doCoilUse(this, player, world, pos, hand, side, hitX, hitY, hitZ);
     }
 
-
+    /**
+     * @param wire The wire type to use
+     * @param targetEntity The target tile entity
+     * @return True if the cable can be connected to the target tile entity
+     * @deprecated Currently unused; Marked for removal
+     */
+    @Deprecated
 	public boolean canConnectCable(WireType wire, TileEntity targetEntity) {
 		//We specifically only support whitelisted TEs here.
 		//Without this, you can connect the AF wire to any connectable block that doesn't specifically deny it.

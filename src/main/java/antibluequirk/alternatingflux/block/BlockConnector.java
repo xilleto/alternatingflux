@@ -2,12 +2,9 @@ package antibluequirk.alternatingflux.block;
 
 import java.util.Arrays;
 
-import antibluequirk.alternatingflux.AlternatingFlux;
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
-import blusunrize.immersiveengineering.common.blocks.BlockIETileProvider;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.EnumPushReaction;
@@ -22,7 +19,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
@@ -59,7 +55,7 @@ public class BlockConnector extends BlockAFTileProvider<BlockTypes_Connector>
 	protected BlockStateContainer createBlockState()
 	{
 		BlockStateContainer base = super.createBlockState();
-		IUnlistedProperty[] unlisted = (base instanceof ExtendedBlockState) ? ((ExtendedBlockState) base).getUnlistedProperties().toArray(new IUnlistedProperty[0]) : new IUnlistedProperty[0];
+		IUnlistedProperty<?>[] unlisted = (base instanceof ExtendedBlockState) ? ((ExtendedBlockState) base).getUnlistedProperties().toArray(new IUnlistedProperty[0]) : new IUnlistedProperty[0];
 		unlisted = Arrays.copyOf(unlisted, unlisted.length+1);
 		unlisted[unlisted.length-1] = IEProperties.CONNECTIONS;
 		return new ExtendedBlockState(this, base.getProperties().toArray(new IProperty[0]), unlisted);
@@ -82,16 +78,14 @@ public class BlockConnector extends BlockAFTileProvider<BlockTypes_Connector>
 	@Override
 	public boolean canIEBlockBePlaced(World world, BlockPos pos, IBlockState newState, EnumFacing side, float hitX, float hitY, float hitZ, EntityPlayer player, ItemStack stack)
 	{
-		switch (BlockTypes_Connector.values()[stack.getItemDamage()])
+		if(stack.getItemDamage() == BlockTypes_Connector.TRANSFORMER_AF.getMeta())
 		{
-			case TRANSFORMER_AF:
-				for (int hh = 1; hh <= 2; hh++)
-				{
-					BlockPos pos2 = pos.up(hh);
-					if (world.isOutsideBuildHeight(pos2) || !world.getBlockState(pos2).getBlock().isReplaceable(world, pos2))
-						return false;
-				}
-			break;
+			for(int offset = 1; offset <= 2; offset++)
+			{
+				BlockPos current_block = pos.up(offset);
+				if(world.isOutsideBuildHeight(current_block) || !world.getBlockState(current_block).getBlock().isReplaceable(world, current_block))
+					return false;
+			}
 		}
 		return true;
 	}

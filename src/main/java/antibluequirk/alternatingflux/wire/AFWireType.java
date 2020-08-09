@@ -6,6 +6,7 @@ import antibluequirk.alternatingflux.block.BlockTypes_Connector;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.WireApi;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -13,7 +14,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class AFWireType extends WireType {
-	public static AFWireType AF;
+	public static final ResourceLocation texture = new ResourceLocation(AlternatingFlux.MODID, "block/connector/relay_af.obj"); 
+	public static AFWireType instance;
 	
 	final int ordinal;
 	
@@ -25,18 +27,16 @@ public class AFWireType extends WireType {
 	public static int[]	wire_colors;
 	public static double[] wire_renderdias	= { 0.078125 };
 	
-	public AFWireType(int ordinal) {
+	private AFWireType(int ordinal) {
 		super();
 		this.ordinal = ordinal;
 	}
 	
 	public static void init()
 	{
-		AF = new AFWireType(0);
-		WireApi.registerFeedthroughForWiretype(AF, new ResourceLocation(AlternatingFlux.MODID, "block/connector/relay_af.obj"),
-				AlternatingFlux.TEX_PASSTHROUGH_AF, new float[]{0, 0, 16, 16},
-				.75, (s)->s.getBlock()== AlternatingFlux.block_conn && s.getValue(AlternatingFlux.block_conn.property) == BlockTypes_Connector.RELAY_AF,
-				8*30F/AF.getTransferRate(), 15, (f)->f);
+		instance = new AFWireType(0);
+		IBlockState validconnection = AlternatingFlux.block_conn.getDefaultState().withProperty(AlternatingFlux.block_conn.property, BlockTypes_Connector.RELAY_AF);
+		WireApi.registerFeedthroughForWiretype(instance, texture, AlternatingFlux.TEX_PASSTHROUGH_AF, new float[]{0, 0, 16, 16}, 0.75, validconnection, 8 * 30F / instance.getTransferRate(), 15, (f)->f);
 	}
 
 	/**

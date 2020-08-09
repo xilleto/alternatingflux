@@ -6,17 +6,13 @@ import java.util.List;
 import org.apache.logging.log4j.Logger;
 
 import antibluequirk.alternatingflux.block.BlockConnector;
-import antibluequirk.alternatingflux.block.TileEntityRelayAF;
-import antibluequirk.alternatingflux.block.TileEntityTransformerAF;
 import antibluequirk.alternatingflux.item.ItemAFBase;
 import antibluequirk.alternatingflux.item.ItemMaterial;
 import antibluequirk.alternatingflux.item.ItemWireCoil;
-import antibluequirk.alternatingflux.wire.AFWireType;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -24,15 +20,13 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.OreDictionary;
 
 @Mod(modid = AlternatingFlux.MODID, version = AlternatingFlux.VERSION, dependencies = "required-after:immersiveengineering@[0.12,)", acceptedMinecraftVersions = "[1.12.2]")
 @Mod.EventBusSubscriber
 public class AlternatingFlux {
-	public static final String MODID	= "alternatingflux";
-	public static final String VERSION	= "${version}";
-	public static final String MODNAME	= "Alternating Flux";
+	public static final String MODID = "alternatingflux";
+	public static final String VERSION = "${version}";
+	public static final String MODNAME = "Alternating Flux";
 	
 	public static Logger logger;
 	
@@ -40,7 +34,7 @@ public class AlternatingFlux {
 	public static AlternatingFlux instance = new AlternatingFlux();
 	public static CreativeTabs creativeTab = new CreativeTabs(MODID) {
 		@Override
-		public ItemStack getTabIconItem() {
+		public ItemStack createIcon() {
 			return new ItemStack(AlternatingFlux.item_coil, 1, 0);
 		}
 	};
@@ -60,15 +54,25 @@ public class AlternatingFlux {
 	public static CommonProxy proxy;
 	
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent e) {
-		logger = e.getModLog();
-		Config.preInit(e);
+	public void preInit(FMLPreInitializationEvent event) {
+		logger = event.getModLog();
+		Config.preInit(event);
 		
-		AFWireType.init();
+		item_material = new ItemMaterial();
+		block_conn = new BlockConnector();
+		item_coil = new ItemWireCoil();
+		
 		proxy.preInit();
-		
-		GameRegistry.registerTileEntity(TileEntityRelayAF.class, new ResourceLocation(MODID, "af_relay"));
-		GameRegistry.registerTileEntity(TileEntityTransformerAF.class, new ResourceLocation(MODID, "af_af_transformer"));
+	}
+	
+	@EventHandler
+	public void init(FMLInitializationEvent event) {
+		proxy.init();
+	}
+	
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent event) {
+		proxy.postInit();
 	}
 	
 	private static ResourceLocation createRegistryName(String unlocalized)
@@ -79,36 +83,14 @@ public class AlternatingFlux {
 	}
 	
 	@SubscribeEvent
-	public static void registerBlocks(RegistryEvent.Register<Block> event) {
-		block_conn = new BlockConnector();
-		
-		for (Block block : blocks)
-			event.getRegistry().register(block.setRegistryName(createRegistryName(block.getUnlocalizedName())));
+	public static void registerBlocks(RegistryEvent.Register<Block> event) {		
+		for(Block block : blocks)
+			event.getRegistry().register(block.setRegistryName(createRegistryName(block.getTranslationKey())));
 	}
 	
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
-		//item_conn = block_conn.createItemBlock();
-		item_coil = new ItemWireCoil();
-		item_material = new ItemMaterial();
-		
-		for (Item item : items)
-			event.getRegistry().register(item.setRegistryName(createRegistryName(item.getUnlocalizedName())));
-		
-		OreDictionary.registerOre("wireConstantan", new ItemStack(item_material, 1, 0));
-	}
-	
-	@SubscribeEvent
-	public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
-		//Recipes.addRecipes(event.getRegistry());
-	}
-	
-	@EventHandler
-	public void init(FMLInitializationEvent e) {
-	}
-	
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent e) {
-		proxy.postInit();
+		for(Item item : items)
+			event.getRegistry().register(item.setRegistryName(createRegistryName(item.getTranslationKey())));
 	}
 }

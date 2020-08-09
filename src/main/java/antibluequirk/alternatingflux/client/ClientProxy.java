@@ -10,8 +10,6 @@ import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.api.energy.wires.WireApi;
 import blusunrize.immersiveengineering.client.IECustomStateMapper;
 import blusunrize.immersiveengineering.client.models.obj.IEOBJLoader;
-import blusunrize.immersiveengineering.client.models.smart.ConnLoader;
-import blusunrize.immersiveengineering.common.blocks.BlockIEFluid;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IIEMetaBlock;
 import blusunrize.lib.manual.ManualInstance;
 import blusunrize.lib.manual.ManualPages;
@@ -40,6 +38,7 @@ public class ClientProxy extends CommonProxy {
 		OBJLoader.INSTANCE.addDomain(AlternatingFlux.MODID);
 		IEOBJLoader.instance.addDomain(AlternatingFlux.MODID);
 	}
+	
 	@Override
 	public void postInit() {
 		super.postInit();
@@ -56,11 +55,14 @@ public class ClientProxy extends CommonProxy {
 				new ManualPages.Text(m, "alternatingflux3")
 		);
 	}
+	
 	@SubscribeEvent
     public void registerTextures(TextureStitchEvent.Pre event){
         event.getMap().registerSprite(AlternatingFlux.TEX_PASSTHROUGH_AF);
     }
+	
 	@SubscribeEvent
+	@SuppressWarnings("deprecation")
 	public void registerModels(ModelRegistryEvent evt)
 	{
 		WireApi.registerConnectorForRender("conn_af", new ResourceLocation("alternatingflux:block/connector/connector_af.obj"), null);
