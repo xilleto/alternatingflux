@@ -31,9 +31,7 @@ public class TileEntityRelayAF extends TileEntityImmersiveConnectable implements
 
 	@Override
 	public void update() {
-		if (!world.isRemote) {
-			
-		} else if (firstTick) {
+		if(world.isRemote && firstTick) {
 			Set<Connection> conns = ImmersiveNetHandler.INSTANCE.getConnections(world, pos);
 			if (conns != null)
 				for (Connection conn : conns)
@@ -151,8 +149,9 @@ public class TileEntityRelayAF extends TileEntityImmersiveConnectable implements
 			return new float[] { 0, wMin, wMin, length, wMax, wMax };
 		case WEST:
 			return new float[] { 1 - length, wMin, wMin, 1, wMax, wMax };
+		default:
+			return new float[] { 0, 0, 0, 1, 1, 1 };
 		}
-		return new float[] { 0, 0, 0, 1, 1, 1 };
 	}
 	
 	@Override

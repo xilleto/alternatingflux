@@ -125,8 +125,9 @@ public class BlockConnector extends BlockUnregisteredIETileProvider<BlockTypes_C
 				return new TileEntityRelayAF();
 			case TRANSFORMER_AF:
 				return new TileEntityTransformerAF();
+			default:
+				return null;
 		}
-		return null;
 	}
 
 	@Override
