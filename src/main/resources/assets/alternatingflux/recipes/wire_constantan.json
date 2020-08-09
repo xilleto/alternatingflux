@@ -2,7 +2,7 @@
   "type": "immersiveengineering:ingredient_shapeless",
   "damage_tool": 1,
   "result": {
-    "item": "alternatingflux:material",
+    "item": "alternatingflux:wire_constantan",
     "data": 0
   },
   "ingredients": [
