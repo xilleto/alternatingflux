@@ -46,7 +46,6 @@ public class AlternatingFlux {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		logger = event.getModLog();
-		Config.preInit(event);
 		
 		item_wire = new Item().setRegistryName(new ResourceLocation(AlternatingFlux.MODID, "wire_constantan")).setTranslationKey("wire_constantan").setCreativeTab(creativeTab);
 		block_conn = new BlockConnector();

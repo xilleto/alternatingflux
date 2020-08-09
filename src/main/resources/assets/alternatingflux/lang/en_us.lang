@@ -7,6 +7,12 @@ tile.connector.transformer_af.name=AF Transformer
 item.wire_constantan.name=Constantan Wire
 item.coil_constantan.name=AF Wire Coil
 
+# CONFIG
+config.alternatingflux.wireTransferRate.name=Wire Transfer Rate
+config.alternatingflux.wireLossRatio.name=Wire Loss Ratio
+config.alternatingflux.wireColouration.name=Wire Colour
+config.alternatingflux.wireLength.name=Wire Max Length
+
 #CREATIVE
 itemGroup.alternatingflux=Alternating Flux
 

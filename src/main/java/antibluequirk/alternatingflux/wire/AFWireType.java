@@ -1,7 +1,8 @@
 package antibluequirk.alternatingflux.wire;
 
+import antibluequirk.alternatingflux.AlternatingFluxConfig;
+
 import antibluequirk.alternatingflux.AlternatingFlux;
-import antibluequirk.alternatingflux.Config;
 import antibluequirk.alternatingflux.block.BlockTypes_Connector;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.WireApi;
@@ -32,19 +33,19 @@ public class AFWireType extends WireType {
 	@Override
 	public double getLossRatio()
 	{
-		return Config.AFConfig.wireLossRatio;
+		return AlternatingFluxConfig.wireLossRatio;
 	}
 
 	@Override
 	public int getTransferRate()
 	{
-		return Config.AFConfig.wireTransferRate;
+		return AlternatingFluxConfig.wireTransferRate;
 	}
 
 	@Override
 	public int getColour(Connection connection)
 	{
-		return Config.AFConfig.wireColouration;
+		return AlternatingFluxConfig.wireColouration;
 	}
 
 	@Override
@@ -63,7 +64,7 @@ public class AFWireType extends WireType {
 	@Override
 	public int getMaxLength()
 	{
-		return Config.AFConfig.wireLength;
+		return AlternatingFluxConfig.wireLength;
 	}
 
 	@Override
