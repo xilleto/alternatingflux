@@ -4,8 +4,8 @@ tile.alternatingflux.connector.relay_af.name=AF Wire Relay
 tile.alternatingflux.connector.transformer_af.name=AF Transformer
 
 # ITEMS
-item.alternatingflux.material.wire_constantan.name=Constantan Wire
-item.alternatingflux.wirecoil.af.name=AF Wire Coil
+item.wire_constantan.name=Constantan Wire
+item.coil_constantan.name=AF Wire Coil
 
 #CREATIVE
 itemGroup.alternatingflux=Alternating Flux

@@ -19,6 +19,6 @@ public class CommonProxy {
 	}
 
 	public void postInit() {
-		OreDictionary.registerOre("wireConstantan", new ItemStack(AlternatingFlux.item_material, 1, 0));
+		OreDictionary.registerOre("wireConstantan", new ItemStack(AlternatingFlux.item_wire, 1, 0));
 	}
 }

@@ -5,7 +5,6 @@ import java.util.Locale;
 import antibluequirk.alternatingflux.AlternatingFlux;
 import antibluequirk.alternatingflux.CommonProxy;
 import antibluequirk.alternatingflux.Config;
-import antibluequirk.alternatingflux.item.ItemAFBase;
 import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.api.energy.wires.WireApi;
 import blusunrize.immersiveengineering.client.IECustomStateMapper;
@@ -15,10 +14,8 @@ import blusunrize.lib.manual.ManualInstance;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -46,8 +43,7 @@ public class ClientProxy extends CommonProxy {
 		
 		m.addEntry("alternatingflux", ManualHelper.CAT_ENERGY,
 				new ManualPages.Text(m, "alternatingflux0"),
-				new ManualPages.Crafting(m, "alternatingfluxWire", new ItemStack(AlternatingFlux.item_material, 1, 0),
-				                                                      new ItemStack(AlternatingFlux.item_coil, 1, 0)),
+				new ManualPages.Crafting(m, "alternatingfluxWire", new ItemStack(AlternatingFlux.item_wire, 1, 0), new ItemStack(AlternatingFlux.item_coil, 1, 0)),
 				new ManualPages.Text(m, "alternatingflux1"),
 				new ManualPages.Crafting(m, "alternatingfluxRelay", new ItemStack(AlternatingFlux.block_conn, 1, 0)),
 				new ManualPages.Crafting(m, "alternatingfluxTransformer", new ItemStack(AlternatingFlux.block_conn, 1, 1)),
@@ -70,7 +66,9 @@ public class ClientProxy extends CommonProxy {
 		WireApi.registerConnectorForRender("transformer_af_left", new ResourceLocation("alternatingflux:block/connector/transformer_af_left.obj"), null);
 		WireApi.registerConnectorForRender("transformer_af_right", new ResourceLocation("alternatingflux:block/connector/transformer_af_right.obj"), null);
 		
-    //This is mostly copied from IE's registerModels function in it's ClientProxy, so we can get everything integrated properly.
+		ModelLoader.setCustomModelResourceLocation(AlternatingFlux.item_coil, 0, new ModelResourceLocation(AlternatingFlux.item_coil.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(AlternatingFlux.item_wire, 0, new ModelResourceLocation(AlternatingFlux.item_wire.getRegistryName(), "inventory"));
+		
 		for(Block block : AlternatingFlux.blocks)
 		{
 			final ResourceLocation loc = Block.REGISTRY.getNameForObject(block);
@@ -114,49 +112,6 @@ public class ClientProxy extends CommonProxy {
 				mapFluidState(block, ((BlockIEFluid)block).getFluid()); */
 			else
 				ModelLoader.setCustomModelResourceLocation(blockItem, 0, new ModelResourceLocation(loc, "inventory"));
-		}
-		
-		for(Item item : AlternatingFlux.items)
-		{
-			if(item instanceof ItemBlock)
-				continue;
-			if(item instanceof ItemAFBase)
-			{
-				ItemAFBase ieMetaItem = (ItemAFBase)item;
-				if(ieMetaItem.registerSubModels&&ieMetaItem.getSubNames()!=null&&ieMetaItem.getSubNames().length > 0)
-				{
-					for(int meta = 0; meta < ieMetaItem.getSubNames().length; meta++)
-					{
-						ResourceLocation loc = new ResourceLocation(AlternatingFlux.MODID, ieMetaItem.itemName+"/"+ieMetaItem.getSubNames()[meta]);
-						ModelBakery.registerItemVariants(ieMetaItem, loc);
-						ModelLoader.setCustomModelResourceLocation(ieMetaItem, meta, new ModelResourceLocation(loc, "inventory"));
-					}
-				} else
-				{
-					final ResourceLocation loc = new ResourceLocation(AlternatingFlux.MODID, ieMetaItem.itemName);
-					ModelBakery.registerItemVariants(ieMetaItem, loc);
-					ModelLoader.setCustomMeshDefinition(ieMetaItem, new ItemMeshDefinition()
-					{
-						@Override
-						public ModelResourceLocation getModelLocation(ItemStack stack)
-						{
-							return new ModelResourceLocation(loc, "inventory");
-						}
-					});
-				}
-			} else
-			{
-				final ResourceLocation loc = Item.REGISTRY.getNameForObject(item);
-				ModelBakery.registerItemVariants(item, loc);
-				ModelLoader.setCustomMeshDefinition(item, new ItemMeshDefinition()
-				{
-					@Override
-					public ModelResourceLocation getModelLocation(ItemStack stack)
-					{
-						return new ModelResourceLocation(loc, "inventory");
-					}
-				});
-			}
 		}
 	}
 	@SubscribeEvent

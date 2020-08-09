@@ -6,8 +6,6 @@ import java.util.List;
 import org.apache.logging.log4j.Logger;
 
 import antibluequirk.alternatingflux.block.BlockConnector;
-import antibluequirk.alternatingflux.item.ItemAFBase;
-import antibluequirk.alternatingflux.item.ItemMaterial;
 import antibluequirk.alternatingflux.item.ItemWireCoil;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -20,6 +18,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.registries.IForgeRegistry;
 
 @Mod(modid = AlternatingFlux.MODID, version = AlternatingFlux.VERSION, dependencies = "required-after:immersiveengineering@[0.12,)", acceptedMinecraftVersions = "[1.12.2]")
 @Mod.EventBusSubscriber
@@ -40,13 +39,10 @@ public class AlternatingFlux {
 	};
 	
 	public static final List<Block> blocks = new ArrayList<>();
-	public static final List<Item> items = new ArrayList<>();
+	public static final List<Item> items = new ArrayList<>(); //TODO remove
 	
-	public static BlockConnector block_conn = null;
-	
-	public static ItemAFBase item_conn = null;
-	public static ItemWireCoil item_coil = null;
-	public static ItemMaterial item_material = null;
+	public static Item item_conn, item_coil, item_wire;
+	public static BlockConnector block_conn;
 	
 	public static ResourceLocation TEX_PASSTHROUGH_AF = new ResourceLocation(AlternatingFlux.MODID, "blocks/passthrough_af");
 	
@@ -58,7 +54,7 @@ public class AlternatingFlux {
 		logger = event.getModLog();
 		Config.preInit(event);
 		
-		item_material = new ItemMaterial();
+		item_wire = new Item().setRegistryName(new ResourceLocation(AlternatingFlux.MODID, "wire_constantan")).setTranslationKey("wire_constantan").setCreativeTab(creativeTab);
 		block_conn = new BlockConnector();
 		item_coil = new ItemWireCoil();
 		
@@ -90,7 +86,10 @@ public class AlternatingFlux {
 	
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
+		IForgeRegistry<Item> reg = event.getRegistry();
 		for(Item item : items)
-			event.getRegistry().register(item.setRegistryName(createRegistryName(item.getTranslationKey())));
+			reg.register(item.setRegistryName(createRegistryName(item.getTranslationKey())));
+		
+		reg.registerAll(item_coil, item_wire);
 	}
 }
