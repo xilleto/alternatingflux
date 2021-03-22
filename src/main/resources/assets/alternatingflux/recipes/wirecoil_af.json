@@ -1,8 +1,8 @@
 {
   "type": "forge:ore_shaped",
-  "group": "alternatingflux:wirecoil_af",
+  "group": "alternatingflux:coil_constantan",
   "result": {
-    "item": "alternatingflux:wirecoil",
+    "item": "alternatingflux:coil_constantan",
     "data": 0,
     "count": 4
   },

@@ -1,54 +1,37 @@
 package antibluequirk.alternatingflux.block;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 
 import antibluequirk.alternatingflux.wire.AFWireType;
-import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.TargetingInfo;
-import blusunrize.immersiveengineering.api.IEEnums.SideConfig;
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
-import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
-import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.AbstractConnection;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
-import blusunrize.immersiveengineering.common.util.EnergyHelper;
-import blusunrize.immersiveengineering.common.util.EnergyHelper.IEForgeEnergyWrapper;
-import blusunrize.immersiveengineering.common.util.EnergyHelper.IIEInternalFluxHandler;
-import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityRelayAF extends TileEntityImmersiveConnectable
-		implements ITickable, IDirectionalTile, IBlockBounds, IOBJModelCallback<IBlockState> {
-	public EnumFacing	facing					= EnumFacing.DOWN;
+public class TileEntityRelayAF extends TileEntityImmersiveConnectable implements ITickable, IDirectionalTile, IBlockBounds, IOBJModelCallback<IBlockState> {
+	public EnumFacing facing = EnumFacing.DOWN;
 
 	boolean firstTick = true;
 
 	@Override
 	public void update() {
-		if (!world.isRemote) {
-			
-		} else if (firstTick) {
+		if(world.isRemote && firstTick) {
 			Set<Connection> conns = ImmersiveNetHandler.INSTANCE.getConnections(world, pos);
 			if (conns != null)
 				for (Connection conn : conns)
@@ -86,7 +69,7 @@ public class TileEntityRelayAF extends TileEntityImmersiveConnectable
 	@Override
 	public boolean canConnectCable(WireType cableType, TargetingInfo target, Vec3i offset)
 	{
-		if(cableType!=AFWireType.AF)
+		if(cableType!=AFWireType.instance)
 			return false;
 		return limitType==null || limitType==cableType;
 	}
@@ -121,7 +104,7 @@ public class TileEntityRelayAF extends TileEntityImmersiveConnectable
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket) {
 		super.readCustomNBT(nbt, descPacket);
-		facing = EnumFacing.getFront(nbt.getInteger("facing"));
+		facing = EnumFacing.byIndex(nbt.getInteger("facing"));
 	}
 	
 	
@@ -129,8 +112,8 @@ public class TileEntityRelayAF extends TileEntityImmersiveConnectable
 	public Vec3d getConnectionOffset(Connection con)
 	{
 		EnumFacing side = facing.getOpposite();
-		double conRadius = con.cableType.getRenderDiameter()/2;
-		return new Vec3d(.5+side.getFrontOffsetX()*(.375-conRadius), .5+side.getFrontOffsetY()*(.375-conRadius), .5+side.getFrontOffsetZ()*(.375-conRadius));
+		double conRadius = 0.375 - con.cableType.getRenderDiameter() / 2;
+		return new Vec3d(0.5 + side.getXOffset() * conRadius, 0.5 + side.getYOffset() * conRadius, 0.5 + side.getZOffset() * conRadius);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -145,7 +128,7 @@ public class TileEntityRelayAF extends TileEntityImmersiveConnectable
 	}
 
 	int getRenderRadiusIncrease() {
-		return AFWireType.AF.getMaxLength();
+		return AFWireType.instance.getMaxLength();
 	}
 
 	@Override
@@ -166,13 +149,14 @@ public class TileEntityRelayAF extends TileEntityImmersiveConnectable
 			return new float[] { 0, wMin, wMin, length, wMax, wMax };
 		case WEST:
 			return new float[] { 1 - length, wMin, wMin, 1, wMax, wMax };
+		default:
+			return new float[] { 0, 0, 0, 1, 1, 1 };
 		}
-		return new float[] { 0, 0, 0, 1, 1, 1 };
 	}
 	
 	@Override
 	public boolean shouldRenderGroup(IBlockState object, String group)
 	{
-		return MinecraftForgeClient.getRenderLayer()== BlockRenderLayer.TRANSLUCENT;
+		return MinecraftForgeClient.getRenderLayer() == BlockRenderLayer.TRANSLUCENT;
 	}
 }
